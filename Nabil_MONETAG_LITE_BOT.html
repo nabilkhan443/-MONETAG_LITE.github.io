@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoneTag Auto Ads</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #ffffff;
+            background: black;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .app-container {
+            position: relative;
+            z-index: 1;
+            width: 80%;
+            text-align: center;
+            margin: 50px auto;
+            border: 2px solid #ff0080;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 20px #ff0080;
+        }
+
+        .app-container h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .developer {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #ff0080;
+        }
+
+        .progress-circle {
+            width: 120px;
+            height: 120px;
+            background-color: #ff0080;
+            border-radius: 50%;
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            box-shadow: 0 0 20px #ff0080;
+        }
+
+        .ad-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px 0;
+            background-color: #ff0080;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 0 30px #ff0080;
+        }
+
+        .ad-button:hover {
+            background-color: #ff0040;
+            transform: scale(1.1); /* Scales the button slightly */
+        }
+
+        .toggle-container {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .toggle-container label {
+            cursor: pointer;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 15px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #ff0080;
+            box-shadow: 0 0 20px #ff0080;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(28px);
+        }
+
+        .rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: black;
+            overflow: hidden;
+        }
+
+        .raindrop {
+            position: absolute;
+            width: 2px;
+            height: 100px;
+            background: linear-gradient(transparent, rgba(255, 255, 255, 0.5));
+            animation: fall 2s linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="rain"></div>
+
+    <div class="app-container">
+        <h1>MoneTag Auto Ads</h1>
+        <div class="developer">MR UNKNOWN</div>
+        <div class="progress-circle" id="progress">0%</div>
+        <p>Watched Ads: <span id="watchedAds">0</span></p>
+        <p>Earned Points: <span id="earnedPoints">0</span></p>
+        <button class="ad-button" onclick="showAd()">Watch Ad</button>
+        <div class="toggle-container">
+            <label for="autoAdSwitch">Auto Ads:</label>
+            <label class="toggle-switch">
+                <input type="checkbox" id="autoAdSwitch" onchange="toggleAutoAds(this)">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <script src='//niphaumeenses.net/vignette.min.js' data-zone='8598575' data-sdk='show_8598575'></script>
+    <script>
+        let watchedAds = 0;
+        let earnedPoints = 0;
+        let autoAdsInterval = null;
+
+        // Function to display an ad
+        function showAd() {
+            if (typeof show_8598575 === 'function') {
+                show_8598575().then(() => {
+                    watchedAds++;
+                    earnedPoints += 10; // Each ad earns 10 points
+                    updateDisplay();
+                }).catch(error => {
+                    console.error('Ad failed to load or display:', error);
+                });
+            } else {
+                console.error('Ad script is not loaded or available.');
+            }
+        }
+
+        // Update the display with current values
+        function updateDisplay() {
+            document.getElementById('watchedAds').innerText = watchedAds;
+            document.getElementById('earnedPoints').innerText = earnedPoints;
+            document.getElementById('progress').innerText = `${watchedAds * 10}%`;
+        }
+
+        // Toggle Auto Ads
+        function toggleAutoAds(toggle) {
+            if (toggle.checked) {
+                startAutoAds();
+            } else {
+                stopAutoAds();
+            }
+        }
+
+        // Start auto ads (3-second interval)
+        function startAutoAds() {
+            if (!autoAdsInterval) {
+                autoAdsInterval = setInterval(showAd, 3000); // Display ad every 3 seconds
+            }
+        }
+
+        // Stop auto ads
+        function stopAutoAds() {
+            clearInterval(autoAdsInterval);
+            autoAdsInterval = null;
+        }
+
+        // Generate raindrops
+        const rainContainer = document.querySelector('.rain');
+        const rainCount = 100;
+
+        for (let i = 0; i < rainCount; i++) {
+            const raindrop = document.createElement('div');
+            raindrop.classList.add('raindrop');
+            raindrop.style.left = Math.random() * 100 + 'vw';
+            raindrop.style.animationDelay = Math.random() * 2 + 's';
+            raindrop.style.animationDuration = 2 + Math.random() * 2 + 's';
+            rainContainer.appendChild(raindrop);
+        }
+    </script>
+</body>
+
+</html>
